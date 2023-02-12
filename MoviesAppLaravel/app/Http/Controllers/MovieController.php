@@ -104,7 +104,7 @@ class MovieController extends Controller
             $movie->title = $request->title;
             $movie->year = $request->year;
             $movie->synopsis = $request->synopsis;
-            $movie->genre = $request->genere;
+            $movie->genre = $request->genre;
             $movie->save();
         return response()->json(["The movie is updated successfully.", $movie]);
         } else return response()->json(["The movie is not updated successfully."]);
