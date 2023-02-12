@@ -17,7 +17,9 @@ class ReviewerFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'firstname' => fake()->firstName(),
+            'lastname' => fake()->lastName(),
+            'birthday' => fake()->date($format = 'Y-m-d', $max = 'now')
         ];
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Movie;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -16,8 +17,11 @@ class MovieFactory extends Factory
      */
     public function definition()
     {
-        return [
-            //
-        ];
+        $movie1 = new Movie("Godfather", 1972, "The aging patriarch of an organized crime dynasty in postwar New York City transfers control of his clandestine empire to his reluctant youngest son.", "crime");
+
+        // 'title',
+        // 'year',
+        // 'synopsis',
+        // 'genre'
     }
 }
