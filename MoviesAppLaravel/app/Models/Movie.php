@@ -11,7 +11,8 @@ class Movie extends Model
     protected $fillable = [
         'title',
         'year',
-        'synopsis'
+        'synopsis',
+        'genre'
     ];
 
     public function reviews()
