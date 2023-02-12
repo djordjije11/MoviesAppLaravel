@@ -1,0 +1,20 @@
+<?php
+
+namespace App;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Reviewer extends Model
+{
+    use HasFactory;
+    protected $fillable = [
+        'firstname',
+        'lastname',
+        'birthday'
+    ];
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+}
