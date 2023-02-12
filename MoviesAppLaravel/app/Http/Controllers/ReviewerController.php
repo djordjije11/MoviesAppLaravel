@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Reviewer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ReviewerController extends Controller
 {
@@ -35,7 +36,21 @@ class ReviewerController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'firstname' => 'required|string|max:50',
+            'lastname' => 'required|string|max:50',
+            'birthday' => 'string'
+        ]);
+        if($validator->fails()){
+            return response()->json($validator->errors());
+        }
+        $reviewer = Reviewer::create([
+            'firstname' => $request->firstname,
+            'lastname' => $request->lastname,
+            'birthday' => $request->birthday
+        ]);
+        $reviewer->save();
+        return response()->json(["The reviewer is stored.", $reviewer]);
     }
 
     /**
@@ -46,7 +61,10 @@ class ReviewerController extends Controller
      */
     public function show(int $id) //GET
     {
-        return Reviewer::find($id);
+        $reviewer = Reviewer::find($id);
+        if($reviewer){
+            return $reviewer;
+        } else return response()->json(["The review is not found in the database."], 404);
     }
 
     /**
@@ -67,9 +85,24 @@ class ReviewerController extends Controller
      * @param  \App\Models\Reviewer  $reviewer
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Reviewer $reviewer)
+    public function update(Request $request, int $id)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'firstname' => 'required|string|max:50',
+            'lastname' => 'required|string|max:50',
+            'birthday' => 'string'
+        ]);
+        if($validator->fails()){
+            return response()->json($validator->errors());
+        }
+        $reviewer = Reviewer::find($id);
+        if($reviewer){
+            $reviewer->firstname = $request->firstname;
+            $reviewer->lastname = $request->lastname;
+            $reviewer->birthday = $request->birthday;
+            $reviewer->save();
+            return response()->json(["The reviewer is updated successfully.", $reviewer]);
+        } else return response()->json(["The reviewer is not in the database."], 404);
     }
 
     /**
@@ -78,8 +111,12 @@ class ReviewerController extends Controller
      * @param  \App\Models\Reviewer  $reviewer
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Reviewer $reviewer)
+    public function destroy(int $id)
     {
-        //
+        $reviewer = Reviewer::find($id);
+        if($reviewer){
+            $reviewer->delete();
+            return response()->json(["The reviewer is deleted.", $reviewer]);
+        } else return response()->json(["The reviewer is not in the database."], 404);
     }
 }

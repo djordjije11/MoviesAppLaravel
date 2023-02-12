@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Movie;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+
 
 class MovieController extends Controller
 {
@@ -35,7 +37,23 @@ class MovieController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|string|max:50',
+            'year' => 'required|integer|max:'.now()->year,
+            'synopsis' => 'string',
+            'genre' => 'string'
+        ]);
+        if($validator->fails()){
+            return response()->json($validator->errors());
+        }
+        $movie = Movie::create([
+            'title' => $request->title,
+            'year' => $request->year,
+            'synopsis' => $request->synopsis,
+            'genre' => $request->genre
+        ]);
+        $movie->save();
+        return response()->json(["The movie is stored.", $movie]);
     }
 
     /**
@@ -46,7 +64,10 @@ class MovieController extends Controller
      */
     public function show(int $id)
     {
-        return Movie::find($id);
+        $movie = Movie::find($id);
+        if($movie){
+            return $movie;
+        } else return response()->json(["The review is not found in the database."], 404);
     }
 
     /**
@@ -67,9 +88,26 @@ class MovieController extends Controller
      * @param  \App\Models\Movie  $movie
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Movie $movie)
+    public function update(Request $request, int $id)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|string|max:50',
+            'year' => 'required|integer|max:'.now()->year,
+            'synopsis' => 'string',
+            'genre' => 'string'
+        ]);
+        if($validator->fails()){
+            return response()->json($validator->errors());
+        }
+        $movie = Movie::find($id);
+        if($movie){
+            $movie->title = $request->title;
+            $movie->year = $request->year;
+            $movie->synopsis = $request->synopsis;
+            $movie->genre = $request->genere;
+            $movie->save();
+        return response()->json(["The movie is updated successfully.", $movie]);
+        } else return response()->json(["The movie is not updated successfully."]);
     }
 
     /**
@@ -78,8 +116,12 @@ class MovieController extends Controller
      * @param  \App\Models\Movie  $movie
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Movie $movie)
+    public function destroy(int $id)
     {
-        //
+        $movie = Movie::find($id);
+        if($movie){
+            $movie->delete();
+            return response()->json(["The movie is deleted.", $movie]);
+        } else return response()->json(["The movie is not deleted successfully."]);
     }
 }

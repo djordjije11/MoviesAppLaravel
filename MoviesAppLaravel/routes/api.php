@@ -3,6 +3,7 @@
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ReviewerController;
+use App\Models\Review;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -27,3 +28,12 @@ Route::get('movie', [MovieController::class, 'index']);
 Route::get('movie/{id}', [MovieController::class, 'show']);
 Route::get('review', [ReviewController::class, 'index']);
 Route::get('review/{id}', [ReviewController::class, 'show']);
+Route::delete('reviewer/{id}', [ReviewerController::class,'destroy']);
+Route::delete('movie/{id}', [MovieController::class,'destroy']);
+Route::delete('review/{id}', [ReviewController::class,'destroy']);
+Route::post('movie', [MovieController::class,'store']);
+Route::post('reviewer', [ReviewerController::class,'store']);
+Route::post('review', [ReviewController::class,'store']);
+Route::put('movie/{id}', [MovieController::class, 'update']);
+Route::put('reviewer/{id}', [ReviewerController::class, 'update']);
+

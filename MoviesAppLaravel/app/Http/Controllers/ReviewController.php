@@ -3,8 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\ReviewResource;
+use App\Models\Movie;
 use App\Models\Review;
+use App\Models\Reviewer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+
 
 class ReviewController extends Controller
 {
@@ -36,7 +40,28 @@ class ReviewController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'rating' => 'required|integer|max:5|min:1',
+        ]);
+        if($validator->fails()){
+            return response()->json($validator->errors());
+        }
+        $movie = Movie::find($request->movie_id);
+        if(!$movie){
+            return response()->json(["The movie is not in the database."], 404);
+        }
+        $reviewer = Reviewer::find($request->reviewer_id);
+        if(!$reviewer){
+            return response()->json(["The reviewer is not in the database."], 404);
+        }
+        $review = Review::create([
+            'reviewer_id' => $reviewer->id,
+            'movie_id' => $movie->id,
+            'rating' => $request->rating,
+            'comment' => $request->comment
+        ]);
+        $review->save();
+        return response()->json(["The review is stored.", $review]);
     }
 
     /**
@@ -47,7 +72,14 @@ class ReviewController extends Controller
      */
     public function show(int $id)
     {
-        return new ReviewResource(Review::find($id));
+        $review = Review::find($id);
+        if($review){
+            $reviewResource = new ReviewResource($review);
+            if($reviewResource){
+                return $reviewResource;
+            }
+        }
+        return response()->json(["The review is not found in the database."], 404);
     }
 
     /**
@@ -79,8 +111,12 @@ class ReviewController extends Controller
      * @param  \App\Models\Review  $review
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Review $review)
+    public function destroy(int $id)
     {
-        //
+        $review = Review::find($id);
+        if($review){
+            $review->delete();
+            return response()->json(["The review is deleted.", $review]);
+        } else return response()->json(["The review is not deleted successfully."]);
     }
 }
