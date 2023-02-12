@@ -16,6 +16,9 @@ return new class extends Migration
         Schema::create('reviewers', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->string('firstname');
+            $table->string('lastname');
+            $table->string('birthday');
         });
     }
 

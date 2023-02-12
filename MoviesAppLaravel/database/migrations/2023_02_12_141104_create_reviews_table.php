@@ -16,6 +16,10 @@ return new class extends Migration
         Schema::create('reviews', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->foreignId('reviewer_id');
+            $table->foreignId('movie_id');
+            $table->integer('rating');
+            $table->string('comment');
         });
     }
 
