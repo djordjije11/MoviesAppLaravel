@@ -64,7 +64,7 @@ class ReviewerController extends Controller
         $reviewer = Reviewer::find($id);
         if($reviewer){
             return $reviewer;
-        } else return response()->json(["The review is not found in the database."], 404);
+        } else return response()->json(["The reviewer is not found in the database."], 404);
     }
 
     /**

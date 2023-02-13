@@ -67,7 +67,7 @@ class MovieController extends Controller
         $movie = Movie::find($id);
         if($movie){
             return $movie;
-        } else return response()->json(["The review is not found in the database."], 404);
+        } else return response()->json(["The movie is not found in the database."], 404);
     }
 
     /**
